@@ -1,0 +1,17 @@
+[package]
+name = "age-auth"
+version = "0.1.0"
+edition = "2024"
+description = "Offline authenticator + OTP library secured by age encryption"
+license = "MIT"
+repository = "https://github.com/mroczect/age-auth"
+readme = "README.md"
+authors = ["mroczect <mroczect@proton.me>"]
+keywords = ["age", "otp", "authenticator", "offline", "encryption"]
+categories = ["cryptography", "authentication"]
+
+[dependencies]
+age_authenticator = { path = "../age_authenticator" }
+age_crypto = { path = "../age_crypto" }
+age_otp = { path = "../age_otp" }
+lib_handler = { path = "../lib_handler" }

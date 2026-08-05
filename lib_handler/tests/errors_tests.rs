@@ -12,3 +12,9 @@ fn test_io_error_conversion() {
     let auth_err: AuthError = io_err.into();
     assert!(matches!(auth_err, AuthError::Io(_)));
 }
+
+#[test]
+fn test_result_type() {
+    let res: Result<()> = Err(AuthError::Otp("bad".into()));
+    assert!(res.is_err());
+}

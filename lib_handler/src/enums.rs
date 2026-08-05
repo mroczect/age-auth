@@ -8,5 +8,5 @@ pub enum Algo {
 }
 
 impl Algo {
-    pub const DEFAULT: Algo = Algo::Sha1;
+    pub const DEFAULT: Algo = Algo::Sha256;
 }

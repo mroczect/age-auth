@@ -2,8 +2,6 @@ use crate::errors::{AuthError, Result};
 use serde::{Deserialize, Serialize};
 use zeroize::Zeroize;
 
-// ==================== Recipient & Identity (sudah ada, diperketat) ====================
-
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Recipient(String);
 
@@ -52,6 +50,14 @@ impl Secret {
         Secret(data)
     }
 
+    pub fn len(&self) -> usize {
+        self.0.len()
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.0.is_empty()
+    }
+
     pub fn as_bytes(&self) -> &[u8] {
         &self.0
     }
@@ -76,11 +82,11 @@ impl From<Vec<u8>> for Secret {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub struct Token(u32);
+pub struct Token(u64);
 
 impl Token {
-    pub fn new(value: u32, digits: u32) -> Result<Self> {
-        if digits == 0 || digits > 10 || value >= 10u32.pow(digits) {
+    pub fn new(value: u64, digits: u32) -> Result<Self> {
+        if digits == 0 || digits > 10 || value >= 10u64.pow(digits) {
             Err(AuthError::InvalidInput(
                 "Token value does not match expected digits".into(),
             ))
@@ -89,7 +95,7 @@ impl Token {
         }
     }
 
-    pub fn value(&self) -> u32 {
+    pub fn value(&self) -> u64 {
         self.0
     }
 
@@ -113,6 +119,12 @@ impl Base32String {
 
     pub fn as_str(&self) -> &str {
         &self.0
+    }
+
+    pub fn to_secret(&self) -> Result<Secret> {
+        let decoded = base32::decode(base32::Alphabet::Rfc4648 { padding: false }, &self.0)
+            .ok_or_else(|| AuthError::InvalidInput("Failed to decode base32".into()))?;
+        Ok(Secret::new(decoded))
     }
 }
 

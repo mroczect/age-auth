@@ -2,5 +2,8 @@
 name = "age_otp"
 version = "0.1.0"
 edition = "2024"
-
+description = "OTP (TOTP/HOTP) generator, independent of age, for the age-auth library"
+license = "MIT"
+repository = "https://github.com/mroczect/age-auth"
+readme = "README.md"
 [dependencies]

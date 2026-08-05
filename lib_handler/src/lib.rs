@@ -1,14 +1,15 @@
-pub fn add(left: u64, right: u64) -> u64 {
-    left + right
-}
+mod constants;
+mod enums;
+mod errors;
+mod macros;
+mod traits;
+mod types;
+mod validation;
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
-    }
-}
+pub use enums::*;
+pub use errors::*;
+pub use traits::*;
+pub use types::*;
+// macros::* dihapus — macro dengan #[macro_export] otomatis tersedia di pemanggil
+pub use constants::*;
+pub use validation::*;

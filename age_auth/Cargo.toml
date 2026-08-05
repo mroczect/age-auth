@@ -15,12 +15,3 @@ age_authenticator = { path = "../age_authenticator" }
 age_crypto = { path = "../age_crypto" }
 age_otp = { path = "../age_otp" }
 lib_handler = { path = "../lib_handler" }
-
-[workspace]
-members = [
-    "age_crypto",
-    "age_otp",
-    "age_authenticator",
-    "lib_handler",
-]
-resolver = "2"

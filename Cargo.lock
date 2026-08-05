@@ -5,6 +5,12 @@ version = 4
 [[package]]
 name = "age-auth"
 version = "0.1.0"
+dependencies = [
+ "age_authenticator",
+ "age_crypto",
+ "age_otp",
+ "lib_handler",
+]
 
 [[package]]
 name = "age_authenticator"

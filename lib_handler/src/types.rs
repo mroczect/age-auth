@@ -1,6 +1,7 @@
 use crate::errors::{AuthError, Result};
 use serde::{Deserialize, Serialize};
 use zeroize::Zeroize;
+use zeroize::Zeroizing;
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Recipient(String);
@@ -195,15 +196,29 @@ impl Counter {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub struct EncryptedPayload(Vec<u8>);
+#[derive(Clone)]
+pub struct EncryptedPayload(Zeroizing<Vec<u8>>);
 
 impl EncryptedPayload {
     pub fn new(data: Vec<u8>) -> Self {
-        EncryptedPayload(data)
+        EncryptedPayload(Zeroizing::new(data))
     }
 
     pub fn as_bytes(&self) -> &[u8] {
         &self.0
     }
 }
+
+impl std::fmt::Debug for EncryptedPayload {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("EncryptedPayload").finish()
+    }
+}
+
+impl PartialEq for EncryptedPayload {
+    fn eq(&self, other: &Self) -> bool {
+        *self.0 == *other.0
+    }
+}
+
+impl Eq for EncryptedPayload {}

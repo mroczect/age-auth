@@ -2,5 +2,8 @@
 name = "lib_handler"
 version = "0.1.0"
 edition = "2024"
-
+description = "Core traits, error types, and handlers for the age-auth workspace"
+license = "MIT"
+repository = "https://github.com/mroczect/age-auth"
+readme = "README.md"
 [dependencies]

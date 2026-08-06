@@ -11,7 +11,7 @@ keywords = ["age", "otp", "authenticator", "offline", "encryption"]
 categories = ["cryptography", "authentication"]
 
 [dependencies]
-age_authenticator = { path = "../age_authenticator" }
-age_crypto = { path = "../age_crypto" }
-age_otp = { path = "../age_otp" }
-lib_handler = { path = "../lib_handler" }
+libage_authenticator = { path = "../libage_authenticator" }
+libage_crypto = { path = "../libage_crypto" }
+libage_otp = { path = "../libage_otp" }
+libage_auth_handler = { path = "../libage_auth_handler" }

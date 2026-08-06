@@ -1,0 +1,18 @@
+[package]
+name = "libage_auth_handler"
+version = "0.1.0"
+edition = "2024"
+description = "Core traits, error types, and validated wrappers for the age-auth workspace"
+authors = ["mroczect <mroczect@proton.me>"]
+license = "MIT"
+repository = "https://github.com/mroczect/age-auth"
+readme = "README.md"
+keywords = ["age", "otp", "authenticator", "encryption", "cryptography"]
+categories = ["cryptography", "authentication"]
+
+[dependencies]
+base32 = "0.5.1"
+hex = "0.4.3"
+serde = { version = "1.0.229", features = ["derive"] }
+thiserror = "2.0.19"
+zeroize = { version = "1.9.0", features = ["zeroize_derive"] }

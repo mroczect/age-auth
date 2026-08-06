@@ -78,16 +78,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "age-auth"
-version = "0.1.0"
-dependencies = [
- "libage_auth_handler",
- "libage_authenticator",
- "libage_crypto",
- "libage_otp",
-]
-
-[[package]]
 name = "age-core"
 version = "0.12.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -104,6 +94,16 @@ dependencies = [
  "rand",
  "secrecy",
  "sha2 0.10.9",
+]
+
+[[package]]
+name = "age_auth"
+version = "0.1.0"
+dependencies = [
+ "libage_auth_handler",
+ "libage_authenticator",
+ "libage_crypto",
+ "libage_otp",
 ]
 
 [[package]]

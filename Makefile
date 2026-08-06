@@ -1,5 +1,9 @@
 .PHONY: all build release check test lint fmt clippy clean run install ci
 
+MEMBERS = age_auth libage_authenticator libage_crypto libage_otp libage_auth_handler
+SNAPCAT = snapcat
+SNAPCAT_OPTS =
+
 all: build
 
 build:
@@ -46,4 +50,17 @@ rebuild:
 	make release && make install
 
 snap:
-	snapcat tests -f markdown -o dev/tests.snapcat.md && snapcat src -f markdown -o dev/src.snapcat.md
+	mkdir -p dev
+	@for dir in $(MEMBERS); do \
+		if [ -d "$$dir" ]; then \
+			echo "📸 $$dir"; \
+			$(SNAPCAT) $$dir -f markdown $(SNAPCAT_OPTS) -o dev/$$dir.src.snapcat.md; \
+		fi; \
+		if [ -d "$$dir/tests" ]; then \
+			echo "📸 $$dir/tests"; \
+			$(SNAPCAT) $$dir/tests -f markdown $(SNAPCAT_OPTS) -o dev/$$dir.tests.snapcat.md; \
+		fi; \
+	done
+	@echo "Menggabungkan semua snapshot ke dev/root.md"
+	cat dev/*.snapcat.md > dev/root.md
+	@echo "Selesai. Lihat dev/root.md"

@@ -1,6 +1,6 @@
 [package]
 name = "libage_auth_handler"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2024"
 description = "Core traits, error types, and validated wrappers for the age-auth workspace"
 authors = ["mroczect <mroczect@proton.me>"]

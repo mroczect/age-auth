@@ -105,12 +105,16 @@ publish-check:
 		$(CARGO) package -p $$member --no-verify || exit 1; \
 	done
 
-publish-all: 
-	$(CARGO) publish -p libage_auth_handler
-	$(CARGO) publish -p libage_crypto
-	$(CARGO) publish -p libage_otp
-	$(CARGO) publish -p libage_authenticator
-	$(CARGO) publish -p age_auth
+publish-all:
+	cargo publish -p libage_auth_handler
+	sleep 10
+	cargo publish -p libage_crypto
+	sleep 10
+	cargo publish -p libage_otp
+	sleep 10
+	cargo publish -p libage_authenticator
+	sleep 10
+	cargo publish -p age_auth
 
 version: 
 	@if [ -z "$(V)" ]; then \

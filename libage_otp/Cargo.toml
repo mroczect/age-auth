@@ -1,6 +1,6 @@
 [package]
 name = "libage_otp"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2024"
 description = "OTP (TOTP/HOTP) generator, independent of age, for the age-auth library"
 license = "MIT"
@@ -8,7 +8,7 @@ repository = "https://github.com/mroczect/age-auth"
 readme = "README.md"
 
 [dependencies]
-libage_auth_handler = { path = "../libage_auth_handler", version = "0.1.0" }
+libage_auth_handler = { path = "../libage_auth_handler", version = "0.2.0" }
 hmac = "0.13.0"
 sha1 = "0.11.0"
 sha2 = "0.11.0"

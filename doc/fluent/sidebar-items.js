@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["FluentError","FluentValue"],"macro":[["fluent_args",1]],"mod":["builtins","bundle","concurrent","types"],"struct":["FluentArgs","FluentAttribute","FluentMessage","FluentResource"],"type":["FluentBundle"]};

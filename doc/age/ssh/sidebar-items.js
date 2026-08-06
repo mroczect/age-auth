@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["Identity","ParseRecipientKeyError","Recipient","UnsupportedKey"],"struct":["EncryptedKey"]};

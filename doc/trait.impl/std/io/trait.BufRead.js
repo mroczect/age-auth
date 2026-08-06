@@ -1,0 +1,9 @@
+(function() {
+    const implementors = Object.fromEntries([["age",[["impl&lt;R: <a class=\"trait\" href=\"https://doc.rust-lang.org/1.97.1/std/io/trait.BufRead.html\" title=\"trait std::io::BufRead\">BufRead</a>&gt; <a class=\"trait\" href=\"https://doc.rust-lang.org/1.97.1/std/io/trait.BufRead.html\" title=\"trait std::io::BufRead\">BufRead</a> for <a class=\"struct\" href=\"age/armor/struct.ArmoredReader.html\" title=\"struct age::armor::ArmoredReader\">ArmoredReader</a>&lt;R&gt;",0]]],["futures_util",[["impl&lt;T&gt; <a class=\"trait\" href=\"https://doc.rust-lang.org/1.97.1/std/io/trait.BufRead.html\" title=\"trait std::io::BufRead\">BufRead</a> for <a class=\"struct\" href=\"futures_util/io/struct.AllowStdIo.html\" title=\"struct futures_util::io::AllowStdIo\">AllowStdIo</a>&lt;T&gt;<div class=\"where\">where\n    T: <a class=\"trait\" href=\"https://doc.rust-lang.org/1.97.1/std/io/trait.BufRead.html\" title=\"trait std::io::BufRead\">BufRead</a>,</div>",0]]],["io_tee",[["impl&lt;R: <a class=\"trait\" href=\"https://doc.rust-lang.org/1.97.1/std/io/trait.BufRead.html\" title=\"trait std::io::BufRead\">BufRead</a>, W: <a class=\"trait\" href=\"https://doc.rust-lang.org/1.97.1/std/io/trait.Write.html\" title=\"trait std::io::Write\">Write</a>&gt; <a class=\"trait\" href=\"https://doc.rust-lang.org/1.97.1/std/io/trait.BufRead.html\" title=\"trait std::io::BufRead\">BufRead</a> for <a class=\"struct\" href=\"io_tee/struct.TeeReader.html\" title=\"struct io_tee::TeeReader\">TeeReader</a>&lt;R, W&gt;",0]]]]);
+    if (window.register_implementors) {
+        window.register_implementors(implementors);
+    } else {
+        window.pending_implementors = implementors;
+    }
+})()
+//{"start":59,"fragment_lengths":[433,486,551]}

@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["decrypt_with_passphrase","encrypt_with_passphrase"]};

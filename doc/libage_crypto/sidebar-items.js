@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["encrypt_multiple","generate_keypair"],"struct":["AgeCrypto"]};

@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["DecryptError","EncryptError","IdentityFileConvertError"],"fn":["decrypt","encrypt","encrypt_and_armor","localizer"],"mod":["armor","encrypted","scrypt","ssh","stream","tag","tagpq","x25519"],"struct":["Decryptor","Encryptor","IdentityFile","NoCallbacks"],"trait":["Callbacks","Identity","Recipient"]};

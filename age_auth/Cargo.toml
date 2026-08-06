@@ -1,6 +1,6 @@
 [package]
 name = "age_auth"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2024"
 description = "Offline authenticator + OTP library secured by age encryption"
 license = "MIT"
@@ -11,7 +11,7 @@ keywords = ["age", "otp", "authenticator", "offline", "encryption"]
 categories = ["cryptography", "authentication"]
 
 [dependencies]
-libage_authenticator = { path = "../libage_authenticator", version = "0.1.0" }
-libage_crypto = { path = "../libage_crypto", version = "0.1.0" }
-libage_otp = { path = "../libage_otp", version = "0.1.0" }
-libage_auth_handler = { path = "../libage_auth_handler", version = "0.1.0" }
+libage_authenticator = { path = "../libage_authenticator", version = "0.2.0" }
+libage_crypto = { path = "../libage_crypto", version = "0.2.0" }
+libage_otp = { path = "../libage_otp", version = "0.2.0" }
+libage_auth_handler = { path = "../libage_auth_handler", version = "0.2.0" }

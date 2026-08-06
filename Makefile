@@ -1,55 +1,70 @@
-.PHONY: all build release check test lint fmt clippy clean run install ci
+.PHONY: all build release check test test-verbose fmt fmt-check clippy lint clean run install uninstall ci rebuild snap doc doc-open bench update audit publish-check publish-all version coverage watch-test watch-build help
 
 MEMBERS = age_auth libage_authenticator libage_crypto libage_otp libage_auth_handler
-SNAPCAT = snapcat
+
+SNAPCAT    = snapcat
 SNAPCAT_OPTS =
+CARGO      = cargo
+RUSTC      = rustc
+NIGHTLY    = nightly
 
 all: build
 
-build:
-	cargo build
+help: 
+	@printf "Usage:\n"
+	@printf "  make <target>\n\n"
+	@printf "Targets:\n"
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
-release:
-	cargo build --release
+build: 
+	$(CARGO) build
 
-check:
-	cargo check --workspace
+release: 
+	$(CARGO) build --release
 
-test:
-	cargo test --workspace
+check: 
+	$(CARGO) check --workspace
 
-test-verbose:
-	cargo test --workspace -- --nocapture
+test: 
+	$(CARGO) test --workspace
 
-fmt:
-	cargo fmt --all
+test-verbose: 
+	$(CARGO) test --workspace -- --nocapture
 
-fmt-check:
-	cargo fmt --all -- --check
+watch-test: 
+	$(CARGO) watch -x 'test --workspace'
 
-clippy:
-	cargo clippy --all-targets --all-features -- -D warnings
+watch-build: 
+	$(CARGO) watch -x 'check --workspace'
 
-lint: fmt clippy
+fmt: 
+	$(CARGO) fmt --all
 
-clean:
-	cargo clean
+fmt-check: 
+	$(CARGO) fmt --all -- --check
 
-run:
-	cargo run
+clippy: 
+	$(CARGO) clippy --all-targets --all-features -- -D warnings
 
-install:
-	cargo install --path .
+lint: fmt clippy 
 
-uninstall:
-	cargo uninstall jsscli
+ci: fmt-check clippy test 
 
-ci: fmt-check clippy test
+clean: 
+	$(CARGO) clean
 
-rebuild:
-	make release && make install
+run: 
+	$(CARGO) run
 
-snap:
+install: 
+	$(CARGO) install --path .
+
+uninstall: 
+	$(CARGO) uninstall jsscli
+
+rebuild: release install 
+
+snap: 
 	mkdir -p dev
 	@for dir in $(MEMBERS); do \
 		if [ -d "$$dir" ]; then \
@@ -61,6 +76,49 @@ snap:
 			$(SNAPCAT) $$dir/tests -f markdown $(SNAPCAT_OPTS) -o dev/$$dir.tests.snapcat.md; \
 		fi; \
 	done
-	@echo "Menggabungkan semua snapshot ke dev/root.md"
+	@echo "Merging all snapshots into dev/root.md"
 	cat dev/*.snapcat.md > dev/root.md
-	@echo "Selesai. Lihat dev/root.md"
+	@echo "Done. See dev/root.md"
+
+doc: 
+	$(CARGO) doc --workspace --no-deps
+
+doc-open: doc 
+	$(CARGO) doc --workspace --no-deps --open
+
+bench: 
+	$(CARGO) bench --workspace
+
+update: 
+	$(CARGO) update
+
+audit: 
+	@if command -v cargo-audit >/dev/null 2>&1; then \
+		$(CARGO) audit; \
+	else \
+		echo "cargo-audit not installed. Run: cargo install cargo-audit"; \
+	fi
+
+publish-check: 
+	@for member in $(MEMBERS); do \
+		echo "👉 Packaging $$member"; \
+		$(CARGO) package -p $$member --no-verify || exit 1; \
+	done
+
+publish-all: 
+	$(CARGO) publish -p libage_auth_handler
+	$(CARGO) publish -p libage_crypto
+	$(CARGO) publish -p libage_otp
+	$(CARGO) publish -p libage_authenticator
+	$(CARGO) publish -p age_auth
+
+version: 
+	@if [ -z "$(V)" ]; then \
+		echo "Usage: make version V=<major|minor|patch|X.Y.Z>"; \
+		exit 1; \
+	fi
+	dev/version_bump.sh $(V)
+
+coverage: 
+	$(CARGO) llvm-cov --workspace --html
+	@echo "Coverage report written to target/llvm-cov/html/index.html"

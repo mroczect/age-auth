@@ -1,7 +1,7 @@
 //! Hash algorithms supported by the OTP engine.
 //!
 //! The `Algo` enum lists every HMAC algorithm that can be used with
-//! [`OtpGenerator::totp`] and [`OtpGenerator::hotp`].
+//! [`crate::traits::OtpGenerator::totp`] and [`crate::traits::OtpGenerator::hotp`].
 
 use serde::{Deserialize, Serialize};
 

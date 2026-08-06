@@ -1,6 +1,6 @@
 //! Convenience macros for early error returns.
 //!
-//! This module exports two macros – [`ensure!`] and [`bail!`] – that make
+//! This module exports two macros – `ensure!` and `bail!` – that make
 //! input validation concise and consistent across the workspace. They return
 //! `Err(AuthError::InvalidInput(...))` from the enclosing function, so they
 //! can only be used inside functions that return `Result<_, AuthError>`.

@@ -312,7 +312,7 @@ impl Counter {
     }
 }
 
-/// Ciphertext produced by [`CryptoBackend::encrypt`].
+/// Ciphertext produced by [`crate::traits::CryptoBackend::encrypt`].
 ///
 /// Wraps the encrypted bytes in `Zeroizing`, so the ciphertext is cleared
 /// from memory when dropped.

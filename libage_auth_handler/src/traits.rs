@@ -77,9 +77,9 @@ pub trait OtpGenerator {
 /// authenticator workflow.
 ///
 /// # Provided methods
-/// - [`provision`] – encrypt a secret.
-/// - [`load_encrypted_secret`] – decrypt an encrypted secret.
-/// - [`generate_totp_from_encrypted`] – decrypt and immediately generate a
+/// - `provision` – encrypt a secret.
+/// - `load_encrypted_secret` – decrypt an encrypted secret.
+/// - `generate_totp_from_encrypted` – decrypt and immediately generate a
 ///   TOTP code.
 ///
 /// # Implementors

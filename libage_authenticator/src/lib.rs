@@ -1,3 +1,47 @@
+//! # libage_authenticator
+//!
+//! High‑level authenticator combining age encryption and OTP generation.
+//!
+//! This crate provides the [`AgeAuthenticator`] type, which ties together
+//! [`libage_crypto`] and [`libage_otp`] to implement the full
+//! [`Authenticator`] trait. It is the primary entry point for building
+//! offline authenticator applications.
+//!
+//! # Architecture
+//!
+//! ```text
+//! AgeAuthenticator
+//!   ├── CryptoBackend (delegated to AgeCrypto)
+//!   ├── OtpGenerator  (delegated to AgeOtp)
+//!   └── Authenticator (combines both)
+//! ```
+//!
+//! # Quick start
+//!
+//! ```rust
+//! use libage_authenticator::AgeAuthenticator;
+//! use libage_crypto::generate_keypair;
+//! use libage_auth_handler::traits::Authenticator;
+//! use libage_auth_handler::types::Secret;
+//! use std::io::Cursor;
+//!
+//! # fn main() -> Result<(), Box<dyn std::error::Error>> {
+//! let auth = AgeAuthenticator::new();
+//! let (recipient, identity) = generate_keypair()?;
+//!
+//! // Provision a secret
+//! let secret = Secret::new(b"JBSWY3DPEHPK3PXP".to_vec());
+//! let encrypted = auth.provision(&recipient, &secret)?;
+//!
+//! // Later, generate a TOTP code
+//! let mut identity_reader = Cursor::new(identity.as_str().as_bytes());
+//! let totp_code = auth.generate_totp_from_encrypted(&mut identity_reader, &encrypted)?;
+//!
+//! println!("Your one‑time code is: {}", totp_code);
+//! # Ok(())
+//! # }
+//! ```
+
 use libage_auth_handler::errors::{AuthError, Result};
 use libage_auth_handler::traits::{Authenticator, CryptoBackend, OtpGenerator};
 use libage_auth_handler::types::{
@@ -8,15 +52,65 @@ use libage_otp::AgeOtp;
 use std::io::Read;
 use zeroize::Zeroizing;
 
+/// The main authenticator struct combining age encryption and OTP generation.
+///
+/// `AgeAuthenticator` holds an [`AgeCrypto`] instance for cryptographic
+/// operations and delegates OTP generation to the associated functions
+/// of [`AgeOtp`].
+///
+/// # Examples
+///
+/// ```
+/// use libage_authenticator::AgeAuthenticator;
+///
+/// let auth = AgeAuthenticator::new();
+/// ```
 pub struct AgeAuthenticator {
     crypto: AgeCrypto,
 }
 
 impl AgeAuthenticator {
+    /// Creates a new `AgeAuthenticator` with default components.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use libage_authenticator::AgeAuthenticator;
+    ///
+    /// let auth = AgeAuthenticator::new();
+    /// ```
     pub fn new() -> Self {
         Self { crypto: AgeCrypto }
     }
 
+    /// Encrypts a `secret` for **multiple** age recipients.
+    ///
+    /// The resulting [`EncryptedPayload`] can be decrypted with the private
+    /// key of any of the provided recipients.
+    ///
+    /// # Parameters
+    /// - `recipients`: Slice of [`Recipient`] values (age public keys).
+    /// - `secret`: The secret to encrypt.
+    ///
+    /// # Returns
+    /// An [`EncryptedPayload`] containing the ciphertext.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// # use libage_authenticator::AgeAuthenticator;
+    /// # use libage_crypto::generate_keypair;
+    /// # use libage_auth_handler::types::Secret;
+    /// # fn main() -> Result<(), Box<dyn std::error::Error>> {
+    /// let auth = AgeAuthenticator::new();
+    /// let (r1, _) = generate_keypair()?;
+    /// let (r2, _) = generate_keypair()?;
+    /// let secret = Secret::new(b"shared secret".to_vec());
+    ///
+    /// let encrypted = auth.provision_multiple(&[r1, r2], &secret)?;
+    /// # Ok(())
+    /// # }
+    /// ```
     pub fn provision_multiple(
         &self,
         recipients: &[Recipient],
@@ -32,17 +126,33 @@ impl Default for AgeAuthenticator {
     }
 }
 
+// ---------------------------------------------------------------------------
+// CryptoBackend implementation
+// ---------------------------------------------------------------------------
 impl CryptoBackend for AgeAuthenticator {
+    /// Encrypts `plaintext` for a single `recipient`.
+    ///
+    /// Delegates to [`AgeCrypto::encrypt`].
     fn encrypt(&self, recipient: &Recipient, plaintext: &Secret) -> Result<EncryptedPayload> {
         self.crypto.encrypt(recipient, plaintext)
     }
 
+    /// Decrypts `ciphertext` using the given `identity`.
+    ///
+    /// Delegates to [`AgeCrypto::decrypt`].
     fn decrypt(&self, identity: &Identity, ciphertext: &EncryptedPayload) -> Result<Secret> {
         self.crypto.decrypt(identity, ciphertext)
     }
 }
 
+// ---------------------------------------------------------------------------
+// OtpGenerator implementation
+// ---------------------------------------------------------------------------
 impl OtpGenerator for AgeAuthenticator {
+    /// Generates a time‑based one‑time password (TOTP).
+    ///
+    /// Uses the current system time. For a deterministic version, use
+    /// [`libage_otp::algorithms::compute_totp_at`].
     fn totp(
         secret: &Secret,
         time_step: TimeStep,
@@ -52,6 +162,9 @@ impl OtpGenerator for AgeAuthenticator {
         AgeOtp::totp(secret, time_step, digits, algo)
     }
 
+    /// Generates a counter‑based one‑time password (HOTP).
+    ///
+    /// See [`libage_otp::algorithms::compute_hotp_at`] for details.
     fn hotp(
         secret: &Secret,
         counter: Counter,
@@ -61,11 +174,50 @@ impl OtpGenerator for AgeAuthenticator {
         AgeOtp::hotp(secret, counter, digits, algo)
     }
 
+    /// Decodes a Base32‑encoded secret and returns the current TOTP code
+    /// using default parameters (6 digits, SHA‑256, 30s step).
     fn totp_now_from_base32(secret_base32: &Base32String) -> Result<String> {
         AgeOtp::totp_now_from_base32(secret_base32)
     }
 }
+
+// ---------------------------------------------------------------------------
+// Authenticator implementation
+// ---------------------------------------------------------------------------
 impl Authenticator for AgeAuthenticator {
+    /// Reads an identity from `identity_reader`, decrypts `encrypted`, and
+    /// returns the resulting secret.
+    ///
+    /// The identity string is read into a [`Zeroizing`] buffer, so it is
+    /// cleared from memory after use.
+    ///
+    /// # Errors
+    /// Returns `Err` if:
+    /// - The reader fails to read to string.
+    /// - The identity string is not a valid age identity.
+    /// - Decryption fails.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// # use libage_authenticator::AgeAuthenticator;
+    /// # use libage_crypto::generate_keypair;
+    /// # use libage_auth_handler::types::{Recipient, Secret, Identity};
+    /// # use libage_auth_handler::traits::{Authenticator, CryptoBackend};
+    /// # use std::io::Cursor;
+    /// # fn main() -> Result<(), Box<dyn std::error::Error>> {
+    /// let auth = AgeAuthenticator::new();
+    /// let (recipient, identity) = generate_keypair()?;
+    /// let secret = Secret::new(b"my secret".to_vec());
+    ///
+    /// let encrypted = auth.provision(&recipient, &secret)?;
+    ///
+    /// let mut reader = Cursor::new(identity.as_str().as_bytes());
+    /// let decrypted = auth.load_encrypted_secret(&mut reader, &encrypted)?;
+    /// assert_eq!(decrypted.as_bytes(), secret.as_bytes());
+    /// # Ok(())
+    /// # }
+    /// ```
     fn load_encrypted_secret(
         &self,
         identity_reader: &mut dyn Read,
@@ -80,6 +232,9 @@ impl Authenticator for AgeAuthenticator {
     }
 }
 
+// ---------------------------------------------------------------------------
+// Unit tests
+// ---------------------------------------------------------------------------
 #[cfg(test)]
 mod tests {
     use super::*;

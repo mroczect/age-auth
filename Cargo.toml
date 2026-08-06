@@ -1,3 +1,9 @@
 [workspace]
 resolver = "2"
-members = ["age_auth", "age_authenticator", "age_crypto", "age_otp", "lib_handler"]
+members = [
+    "age_auth",
+    "libage_authenticator",
+    "libage_auth_handler",
+    "libage_crypto",
+    "libage_otp",
+]

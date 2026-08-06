@@ -1,6 +1,6 @@
 [package]
 name = "libage_crypto"
-version = "0.2.0"
+version = "0.1.0"
 edition = "2024"
 description = "Age encryption/decryption backend for the age-auth authenticator"
 license = "MIT"
@@ -8,7 +8,7 @@ repository = "https://github.com/mroczect/age-auth"
 readme = "README.md"
 
 [dependencies]
-libage_auth_handler = { path = "../libage_auth_handler", version = "0.2.0" }
+libage_auth_handler = { path = "../libage_auth_handler", version = "0.1.0" }
 librage = "1.1.0"
 
 [dev-dependencies]

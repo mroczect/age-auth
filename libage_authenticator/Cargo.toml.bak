@@ -1,6 +1,6 @@
 [package]
 name = "libage_authenticator"
-version = "0.2.0"
+version = "0.1.0"
 edition = "2024"
 description = "High-level authenticator combining age encryption and OTP generation"
 license = "MIT"
@@ -8,9 +8,9 @@ repository = "https://github.com/mroczect/age-auth"
 readme = "README.md"
 
 [dependencies]
-libage_auth_handler = { path = "../libage_auth_handler", version = "0.2.0" }
-libage_crypto = { path = "../libage_crypto", version = "0.2.0" }
-libage_otp = { path = "../libage_otp", version = "0.2.0" }
+libage_auth_handler = { path = "../libage_auth_handler", version = "0.1.0" }
+libage_crypto = { path = "../libage_crypto", version = "0.1.0" }
+libage_otp = { path = "../libage_otp", version = "0.1.0" }
 zeroize = "1.9.0"
 
 [dev-dependencies]

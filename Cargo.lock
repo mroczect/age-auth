@@ -98,7 +98,7 @@ dependencies = [
 
 [[package]]
 name = "age_auth"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "libage_auth_handler",
  "libage_authenticator",
@@ -1070,7 +1070,7 @@ dependencies = [
 
 [[package]]
 name = "libage_auth_handler"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "base32",
  "hex",
@@ -1081,7 +1081,7 @@ dependencies = [
 
 [[package]]
 name = "libage_authenticator"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "criterion",
  "libage_auth_handler",
@@ -1093,7 +1093,7 @@ dependencies = [
 
 [[package]]
 name = "libage_crypto"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "libage_auth_handler",
  "librage",
@@ -1102,7 +1102,7 @@ dependencies = [
 
 [[package]]
 name = "libage_otp"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "base32",
  "criterion",

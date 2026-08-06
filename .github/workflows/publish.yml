@@ -1,0 +1,45 @@
+name: Publish to crates.io
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  publish:
+    name: Publish all workspace crates
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - name: Login to crates.io
+        run: cargo login ${{ secrets.CRATES_IO_TOKEN }}
+
+      - name: Publish libage_auth_handler
+        run: cargo publish -p libage_auth_handler
+
+      - name: Wait for registry index update
+        run: sleep 5
+
+      - name: Publish libage_crypto
+        run: cargo publish -p libage_crypto
+
+      - name: Wait for registry index update
+        run: sleep 5
+
+      - name: Publish libage_otp
+        run: cargo publish -p libage_otp
+
+      - name: Wait for registry index update
+        run: sleep 5
+
+      - name: Publish libage_authenticator
+        run: cargo publish -p libage_authenticator
+
+      - name: Wait for registry index update
+        run: sleep 5
+
+      - name: Publish age_auth
+        run: cargo publish -p age_auth

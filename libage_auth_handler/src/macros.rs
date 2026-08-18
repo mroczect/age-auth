@@ -8,9 +8,13 @@
 /// Exits the function with an `InvalidInput` error if the condition is false.
 ///
 /// # Usage
-/// ```rust,ignore
+/// ```rust
+/// # use libage_auth_handler::{ensure, AuthError};
+/// # fn validate(input: &str, recipient: &str) -> Result<(), AuthError> {
 /// ensure!(input.len() >= 8, "input too short");
-/// ensure!(recipient.is_valid(), AuthError::InvalidInput("bad recipient"));
+/// ensure!(recipient.starts_with("age1"), AuthError::InvalidInput("bad recipient".to_string()));
+/// # Ok(())
+/// # }
 /// ```
 ///
 /// The first form takes a string literal; the second form takes any
@@ -24,7 +28,7 @@ macro_rules! ensure {
     };
     ($cond:expr, $err:expr $(,)?) => {
         if !$cond {
-            return Err($crate::errors::AuthError::InvalidInput($err.into()));
+            return Err($err.into());
         }
     };
 }
@@ -32,9 +36,16 @@ macro_rules! ensure {
 /// Immediately exits the function with an error.
 ///
 /// # Usage
-/// ```rust,ignore
+/// ```rust
+/// # use libage_auth_handler::{bail, AuthError};
+/// # fn fail_with_message() -> Result<(), AuthError> {
 /// bail!("something went wrong");
+/// # }
+/// #
+/// # fn fail_with_error() -> Result<(), AuthError> {
+/// # let my_error = AuthError::InvalidInput("bad".to_string());
 /// bail!(my_error);
+/// # }
 /// ```
 ///
 /// The first form takes a string literal and returns
